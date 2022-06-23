@@ -1,4 +1,6 @@
 <?php	
+date_default_timezone_set('Africa/Nairobi');
+$php_date=  date('d/m/Y  H:i:s');
 include_once "../db/dbconn.php";
 
 	$phone = "N/A";
@@ -53,19 +55,23 @@ include_once "../db/dbconn.php";
 		fwrite($myfile, "device=$device\n");
 	}
 	fclose($myfile);
-	
-//$Tcode = substr($text, 0, 10);  //QFL24JEVYK
+
+// works with till numbers	
 $my_array1 = explode(" ", $text);
 $Tcode = $my_array1[0];
-$amount = substr($my_array1[4], 3); 
+$amount = substr($my_array1[5], 5); 
 $sanitizeAmount = str_replace(",", "", $amount);
-$finalAmount = substr($sanitizeAmount, 0, -3);
+$GETfinalAmount = substr($sanitizeAmount, 0, -3);
 
-// 	insert data derived to database
-if(isset($_GET["phone"])){
-$activationInsert= "INSERT INTO `deposits`(`transId`, `date`, `phone`,`amout`,`status`) VALUES ('$Tcode','$php_date','$phone','$finalAmount',0)";
-$resultQuery = mysqli_query($conn,$activationInsert); 
-}
+// works with send money
+// $amount = substr($my_array1[5], 3); 
+// $sanitizeAmount = str_replace(",", "", $amount);
+// $finalAmount = substr($sanitizeAmount, 2, -3);
+
+// 	insert to db
+$activationInsert= "INSERT INTO `deposits`(`transId`, `date`, `phone`,`amout`,`status`) VALUES ('$Tcode','$php_date','$phone','$GETfinalAmount',0)";
+mysqli_query($conn,$activationInsert); 
+
 
 	//must return "OK" or APP will consider message as failed
 	echo "OK";
